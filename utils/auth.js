@@ -1,13 +1,13 @@
-const jwt = require('jsonwebtoken');
-const secret = 'your_secret_key'; // Reemplazar por una clave secreta fuerte
+import jwt from "jsonwebtoken";
+const { sign, verify } = jwt;
 
 function generateAccessToken(userId) {
-  return jwt.sign({ userId }, secret, { expiresIn: '1h' });
+  return sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
 }
 
 function verifyAccessToken(token) {
   try {
-    return jwt.verify(token, secret);
+    return verify(token, process.env.JWT_SECRET);
   } catch (error) {
     return null;
   }
@@ -15,17 +15,22 @@ function verifyAccessToken(token) {
 
 function isAuthenticated(req) {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return false;
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
   const decoded = verifyAccessToken(token);
   return decoded !== null;
 }
 
-module.exports = {
+function getUnauthorizedResponse(res) {
+  return res.status(401).json({ error: "Unauthorized" });
+}
+
+export {
   generateAccessToken,
   verifyAccessToken,
   isAuthenticated,
+  getUnauthorizedResponse,
 };
