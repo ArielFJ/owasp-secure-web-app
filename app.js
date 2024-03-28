@@ -1,6 +1,6 @@
 import express from "express";
 import router from "./routes/index.js";
-import { printRequest } from "./utils/request.js";
+import { logRequest } from "./utils/request.js";
 import db from "./db.js";
 import dotenv from "dotenv";
 
@@ -10,7 +10,7 @@ const app = express();
 // Usar JSON en las peticiones
 app.use(express.json());
 
-app.use("/", printRequest, router);
+app.use("/", logRequest, router);
 
 // Manejo de errores 404
 app.use((req, res) => {
