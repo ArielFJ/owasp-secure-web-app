@@ -39,7 +39,7 @@ function saveToFile() {
     fs.mkdirSync("db");
   }
 
-  fs.appendFileSync("db/users.json", json, "utf8");
+  fs.writeFileSync("db/users.json", json, "utf8");
 }
 
 export default {

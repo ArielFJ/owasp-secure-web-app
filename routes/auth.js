@@ -3,6 +3,11 @@ import db from "../db.js";
 import User from "../models/user.js";
 import { generateAccessToken } from "../utils/auth.js";
 
+const getSaltRounds = () => {
+  const saltRounds = process.env.BCRYPT_SALT_ROUNDS || 10;
+  return parseInt(saltRounds);
+};
+
 const register = async (req, res) => {
   const { email, username: requestUsername, password } = req.body;
   const username = email || requestUsername;
@@ -19,7 +24,7 @@ const register = async (req, res) => {
   }
 
   // Crear un nuevo usuario (usar bcrypt para contraseñas seguras)
-  const hashedPassword = bcrypt.hash(password, process.env.BCRYPT_SALT_ROUNDS); // Reemplazar por bcrypt
+  const hashedPassword = await bcrypt.hash(password, getSaltRounds()); // Reemplazar por bcrypt
   const user = new User({ username, password: hashedPassword });
   await db.user.saveUser(user);
 

@@ -2,7 +2,10 @@ import jwt from "jsonwebtoken";
 const { sign, verify } = jwt;
 
 function generateAccessToken(userId) {
-  return sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  return sign(
+    { userId },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN });
 }
 
 function verifyAccessToken(token) {
